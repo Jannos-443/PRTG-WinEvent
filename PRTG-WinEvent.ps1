@@ -1,4 +1,4 @@
-﻿<#
+<#
     .SYNOPSIS
     Monitors Windows Eventlog with the ability to exclude and include.
 
@@ -74,7 +74,7 @@
 
       Example: ^(Test123|192.168.3.0)$
 
-      Example2: ^(192.168.*|10.10.10.1)$ excludes all 192.168. subnets and 10.10.10.1
+      Example2: ^(192.168.*|10.10.10.1)$ excludes all 192.168. and 10.10.10.1
 
     #https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_regular_expressions?view=powershell-7.1
 
@@ -181,7 +181,27 @@ elseif($LogName -ne "")
 #SuppressHashFilter=@{Level=4}
 
 #Get Events
-$Events = Get-WinEvent -MaxEvents $MaxEvents -ComputerName $Computername -FilterHashtable $filter
+try{
+    $Events = Get-WinEvent -MaxEvents $MaxEvents -ComputerName $Computername -FilterHashtable $filter
+    }
+
+catch{
+    if($_.FullyQualifiedErrorID -eq "NoMatchingEventsFound,Microsoft.PowerShell.Commands.GetWinEventCommand")
+        {
+        $events = $null
+        }
+    else{
+        $Output = "line:$($_.InvocationInfo.ScriptLineNumber.ToString()) char:$($_.InvocationInfo.OffsetInLine.ToString()) --- message: $($_.Exception.Message.ToString()) --- line: $($_.InvocationInfo.Line.ToString()) "
+        $Output = $Output.Replace("<","")
+        $Output = $Output.Replace(">","")
+        Write-Output "<prtg>"
+        Write-Output "<error>1</error>"
+        Write-Output "<text>$Output</text>"
+        Write-Output "</prtg>"
+        Exit
+        }
+    }
+
 
 #Remove Event Level
 if($LogLevel -notmatch "A")
