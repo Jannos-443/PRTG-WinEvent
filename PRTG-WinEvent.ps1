@@ -45,45 +45,45 @@
 
     .PARAMETER ExcludeID
     Regular expression to describe the IDs to Exclude
-    - Example: '(12345|10016)'
+    - Example: '^(12345|10016)$'
      
     .PARAMETER ExcludeProvider
     Regular expression to describe the Provides to Exclude
-    - Example: '(PowerShell|TestProvider)'
+    - Example: '^(PowerShell|TestProvider)$'
      
     .PARAMETER ExcludeMessage
     Regular expression to describe the Messages to Exclude
-    - Example: '(Username123)'
+    - Example: '^(Username123)$'
    
     .PARAMETER IncludeID
     Regular expression to describe the IDs to Include
     Include = only this two IDs are found
-    - Example: '(12345|10016)'
+    - Example: '^(12345|10016)$'
      
     .PARAMETER IncludeProvider
     Regular expression to describe the Provides to Include
     Include = only this two Providers are found
-    - Example: '(WindowsPowershell|TestProvider)'
+    - Example: '^(WindowsPowershell|TestProvider)$'
      
     .PARAMETER IncludeMessage
     Regular expression to describe the Messages to Include
     Include = only this Messages are found
-    - Example: '(Username123)'
+    - Example: '^(Username123)$'
        
     ####Regular expression example####
 
-      Example: ^(Test123|192.168.3.0)$
+      Example: '^(Test123|192.168.3.0)$'
 
-      Example2: ^(192.168.*|10.10.10.1)$ excludes all 192.168. and 10.10.10.1
+      Example2: '^(192.168.*|10.10.10.1)$' excludes 192.168.12345 and 10.10.10.1
 
     #https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_regular_expressions?view=powershell-7.1
 
     .EXAMPLE
     Sample call from PRTG
-    PRTG-WinEvent.ps1 -Computername '%host' -LogName "Application" -MaxEvents 100 -TimeAgo 30 -LogLevel "CE" -ExcludeID '(3025|3018)'
+    PRTG-WinEvent.ps1 -Computername '%host' -LogName "Application" -TimeAgo 30 -LogLevel "CE" -ExcludeID '^(3025|3018)$'
     > Monitors the last 30 min Application Log for Criticals and Errors, excludes IDs 3025 and 3018
 
-    PRTG-WinEvent.ps1 -Computername '%host' -ProviderName "PowerShell" -MaxEvents 100 -TimeAgo 30 -LogLevel "CEW" -ExcludeID '(30124)'
+    PRTG-WinEvent.ps1 -Computername '%host' -ProviderName "PowerShell" -MaxEvents 10 -TimeAgo 30 -LogLevel "CEW" -ExcludeID '^(30124)$'
     > Monitors the last 30 min Log with source Powershell for Warning, Criticals and Errors, excludes EventID 30124
     
     Author:  Jannos-443
@@ -253,9 +253,9 @@ if($ExcludeMessage -ne "")
     }
 
 ##Global Excludes
-$ExcludeProviderScript = "(Perflib)"
+$ExcludeProviderScript = '^(Perflib)$'
 #Perflib = unnecessary
-$ExcludeIDScript = "(10016)"
+$ExcludeIDScript = '^(10016)$'
 #10016 https://docs.microsoft.com/en-us/troubleshoot/windows-client/application-management/event-10016-logged-when-accessing-dcom#cause
 $ExcludeMessageScript = ""
 
