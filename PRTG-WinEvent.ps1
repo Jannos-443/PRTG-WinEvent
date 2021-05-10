@@ -94,7 +94,7 @@ param(
 [string]$LogName = "",
 [string]$ProviderName = "",
 [string]$LogLevel = "EC",
-[int]$MaxEvents = 100,
+[int]$MaxEvents = 50,
 [int]$TimeAgo = 30,
 [string]$ExcludeID = "",
 [string]$ExcludeProvider = "",
