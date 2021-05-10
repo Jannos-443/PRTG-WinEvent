@@ -25,7 +25,7 @@ You can exclude IDs, Providers and Messages.
    | Security Context | Use Windows credentials of parent device |
    | Scanning Interval | 15 minutes |
 
-## Default excludes
+## Default global excludes
 
    | Exclude | Reason |
    | --- | --- |
