@@ -253,7 +253,8 @@ if($ExcludeMessage -ne "")
     }
 
 ##Global Excludes
-$ExcludeProviderScript = ""
+$ExcludeProviderScript = "(Perflib)"
+#Perflib = unnecessary
 $ExcludeIDScript = "(10016)"
 #10016 https://docs.microsoft.com/en-us/troubleshoot/windows-client/application-management/event-10016-logged-when-accessing-dcom#cause
 $ExcludeMessageScript = ""
