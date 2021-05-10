@@ -237,7 +237,7 @@ if($LogLevel -notmatch "V")
 #Exclude Provider
 if($ExcludeProvider -ne "")
     {
-    $Events = $Events | where {$_.ID -notmatch $ExcludeProvider}
+    $Events = $Events | where {$_.ProviderName -notmatch $ExcludeProvider}
     }
 
 #Exclude IDs
@@ -253,7 +253,7 @@ if($ExcludeMessage -ne "")
     }
 
 ##Global Excludes
-$ExcludeProviderScript = '^(Perflib)$'
+$ExcludeProviderScript = '^(Microsoft-Windows-Perflib)$'
 #Perflib = unnecessary
 $ExcludeIDScript = '^(10016)$'
 #10016 https://docs.microsoft.com/en-us/troubleshoot/windows-client/application-management/event-10016-logged-when-accessing-dcom#cause
@@ -262,7 +262,7 @@ $ExcludeMessageScript = ""
 #Exclude Provider
 if($ExcludeProviderScript -ne "")
     {
-    $Events = $Events | where {$_.ID -notmatch $ExcludeProviderScript}
+    $Events = $Events | where {$_.ProviderName -notmatch $ExcludeProviderScript}
     }
 
 #Exclude IDs
@@ -278,16 +278,16 @@ if($ExcludeMessageScript -ne "")
     }
 
 ##Includes 
-#Include Provider
+#Include IDs
 if($IncludeID -ne "")
     {
     $Events = $Events | where {$_.ID -match $IncludeID}
     }
 
-#Include IDs
+#Include Provider
 if($IncludeProvider -ne "")
     {
-    $Events = $Events | where {$_.ID -match $IncludeProvider}
+    $Events = $Events | where {$_.ProviderName -match $IncludeProvider}
     }
 
 #Include Messages
@@ -306,7 +306,7 @@ if($count -ge 1)
 
     foreach($event in $Last)
         {
-        $text += "$($event.TimeCreated) - ID:$($event.ID) - $($event.Message)"
+        $text += "$($event.TimeCreated) - ID:$($event.ID) Provider:$($event.ProviderName) - $($event.Message)"
         }
 
     $text = $text.Replace("<","")
