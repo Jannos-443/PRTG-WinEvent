@@ -30,7 +30,7 @@ You can exclude IDs, Providers and Messages.
    | Exclude | Reason |
    | --- | --- |
    | ID = 10016 | MS by design |
-   | Provider = Perflib | unnecessary |
+   | Provider = Microsoft-Windows-Perflib | unnecessary |
 
 ## Examples
 Example Call: 
