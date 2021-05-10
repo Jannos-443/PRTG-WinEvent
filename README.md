@@ -33,6 +33,11 @@ You can exclude IDs, Providers and Messages.
    | Provider = Perflib | unnecessary |
 
 ## Examples
+Example Call: 
+
+`PRTG-WinEvent.ps1 -Computername '%host' -LogName "Application" -TimeAgo 30 -LogLevel "CE" -ExcludeID '^(3025|3018)$'`
+
+
 ![PRTG-WinEvent](media/ok.png)
 ![PRTG-WinEvent](media/error.png)
 
