@@ -25,7 +25,12 @@ You can exclude IDs, Providers and Messages.
    | Security Context | Use Windows credentials of parent device |
    | Scanning Interval | 15 minutes |
 
-more information in the Script
+## Default excludes
+
+   | Exclude | Reason |
+   | --- | --- |
+   | ID = 10016 | MS by design |
+   | Provider = Perflib | unnecessary |
 
 ## Examples
 ![PRTG-WinEvent](media/ok.png)
