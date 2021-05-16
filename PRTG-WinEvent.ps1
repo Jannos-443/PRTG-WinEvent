@@ -91,6 +91,8 @@
 #>
 param(
 [string]$Computername = "",
+[string]$Username = '',
+[string]$Password = '',
 [string]$LogName = "",
 [string]$ProviderName = "",
 [string]$LogLevel = "EC",
@@ -180,9 +182,41 @@ elseif($LogName -ne "")
 
 #SuppressHashFilter=@{Level=4}
 
+#Generate Credentials Object, if provided via parameter
+try
+    {
+    if($Username -eq "" -or $Password -eq "") 
+        {
+        $Credentials = $null
+        }
+    else 
+        {
+        $SecPasswd  = ConvertTo-SecureString $Password -AsPlainText -Force
+        $Credentials= New-Object System.Management.Automation.PSCredential ($Username, $secpasswd)
+        }
+
+    }
+ 
+catch 
+    {
+    Write-Output "<prtg>"
+    Write-Output " <error>1</error>"
+    Write-Output " <text>Error Parsing Credentials ($($_.Exception.Message))</text>"
+    Write-Output "</prtg>"
+    Exit
+    }
+
 #Get Events
 try{
-    $Events = Get-WinEvent -MaxEvents $MaxEvents -ComputerName $Computername -FilterHashtable $filter
+    if($Credentials -ne $null)
+        {
+        $Events = Get-WinEvent -MaxEvents $MaxEvents -ComputerName $Computername -FilterHashtable $filter -Credential $Credentials
+        }
+    
+    else
+        {
+        $Events = Get-WinEvent -MaxEvents $MaxEvents -ComputerName $Computername -FilterHashtable $filter
+        }
     }
 
 catch{
