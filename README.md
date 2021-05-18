@@ -25,6 +25,8 @@ You can exclude IDs, Providers and Messages.
    | Security Context | Use Windows credentials of parent device |
    | Scanning Interval | 15 minutes |
 
+If you got "The RPC server is unavailable" error, try to enable the Windows Firewall Rule "Remote Event Log Management (RPC)" 
+
 ## Default global excludes
 
    | Exclude | Reason |
