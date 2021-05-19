@@ -25,7 +25,9 @@ You can exclude IDs, Providers and Messages.
    | Security Context | Use Windows credentials of parent device |
    | Scanning Interval | 15 minutes |
 
-If you got "The RPC server is unavailable" error, try to enable the Windows Firewall Rule "Remote Event Log Management (RPC)" 
+
+
+The script got variables to global exclude events for all devices or parameter to exclude events for special devices.
 
 ## Default global excludes
 
@@ -33,6 +35,8 @@ If you got "The RPC server is unavailable" error, try to enable the Windows Fire
    | --- | --- |
    | ID = 10016 | MS by design |
    | Provider = Microsoft-Windows-Perflib | unnecessary |
+   
+
 
 ## Examples
 Example Call: 
@@ -43,9 +47,27 @@ Example Call:
 ![PRTG-WinEvent](media/ok.png)
 ![PRTG-WinEvent](media/error.png)
 
-excludes
-------------------
+## FAQ
 
+### The RPC server is unavailable
+If you got "The RPC server is unavailable" error, try to enable the Windows Firewall Rule "Remote Event Log Management (RPC)" 
+
+### How to get Provider Names
+List all Providers of a Server:
+ `Get-WinEvent -ListProvider * | Select Name`
+ 
+List Providers with *perflib* in its Name
+ `Get-WinEvent -ListProvider *perflib*`
+ 
+### How to get Log Names
+List all Logs of a Server:
+ `Get-WinEvent -ListLog *`
+ 
+List Logs with *perf* in its Name
+ `Get-WinEvent -ListLog *perf*`
+
+
+### exclude Syntax
 For more information about regular expressions in PowerShell, visit [Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_regular_expressions).
 
 ".+" is one or more charakters
