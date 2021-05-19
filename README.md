@@ -49,7 +49,7 @@ Example Call:
 ## FAQ
 
 ### The RPC server is unavailable
-If you got "The RPC server is unavailable" error, try to enable the Windows Firewall Rule "Remote Event Log Management (RPC)" 
+If you got "The RPC server is unavailable" error, try to enable the Windows Firewall Rule "Remote Event Log Management (RPC)" on the remote Server 
 
 ### How to get Provider Names
 List all Providers of a Server:
