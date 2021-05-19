@@ -1,5 +1,4 @@
 # PRTG-WinEvent
-# About
 
 ## Project Owner:
 
