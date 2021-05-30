@@ -291,7 +291,7 @@ $ExcludeProviderScript = '^(Microsoft-Windows-Perflib)$'
 #Perflib = unnecessary
 $ExcludeIDScript = '^(10016)$'
 #10016 https://docs.microsoft.com/en-us/troubleshoot/windows-client/application-management/event-10016-logged-when-accessing-dcom#cause
-$ExcludeMessageScript = ""
+$ExcludeMessageScript = ''
 
 #Exclude Provider
 if($ExcludeProviderScript -ne "")
@@ -345,6 +345,8 @@ if($count -ge 1)
 
     $text = $text.Replace("<","")
     $text = $text.Replace(">","")
+    $text = $text.Replace("#","")
+    #The number sign (#) is not supported in sensor messages. If a message contains a number sign, the message is clipped at this point - https://www.paessler.com/manuals/prtg/custom_sensors
     }
 else
     {
@@ -376,4 +378,6 @@ $xmlOutput = $xmlOutput + "<text>$text</text>"
 
 $xmlOutput = $xmlOutput + "</prtg>"
 
-$xmlOutput
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+[Console]::WriteLine($xmlOutput)
+#https://kb.paessler.com/en/topic/64817-how-can-i-show-special-characters-with-exe-script-sensors
