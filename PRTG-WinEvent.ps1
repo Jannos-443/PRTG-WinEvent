@@ -96,7 +96,7 @@ param(
 [string]$LogName = "",
 [string]$ProviderName = "",
 [string]$LogLevel = "EC",
-[int]$MaxEvents = 50,
+[int]$MaxEvents = 100,
 [int]$TimeAgo = 30,
 [string]$ExcludeID = "",
 [string]$ExcludeProvider = "",
@@ -289,9 +289,16 @@ if($ExcludeMessage -ne "")
 ##Global Excludes
 $ExcludeProviderScript = '^(Microsoft-Windows-Perflib)$'
 #Perflib = unnecessary
-$ExcludeIDScript = '^(10016)$'
-#10016 https://docs.microsoft.com/en-us/troubleshoot/windows-client/application-management/event-10016-logged-when-accessing-dcom#cause
+
+$ExcludeIDScript = '^(123456789)$'
+
 $ExcludeMessageScript = ''
+
+#Exclude ID and Provider has to match
+$ExcludeIDwithProvider= @(
+       @{ ID = '1500'; Provider = 'SNMP'} #1500 https://social.technet.microsoft.com/forums/windows/en-US/16de5197-3347-4a0d-967e-f5a950f89435/event-1500-snmp
+       @{ ID = '10016'; Provider = "Microsoft-Windows-DistributedCOM"} #10016 https://docs.microsoft.com/en-us/troubleshoot/windows-client/application-management/event-10016-logged-when-accessing-dcom#cause
+        )
 
 #Exclude Provider
 if($ExcludeProviderScript -ne "")
@@ -311,6 +318,13 @@ if($ExcludeMessageScript -ne "")
     $Events = $Events | where {$_.Message -notmatch $ExcludeMessageScript}
     }
 
+#Exclude ID+Provider 
+
+foreach($IDplusProvider in $ExcludeIDwithProvider)
+    {
+    $Events = $Events | where {(($_.ID -ne $IDplusProvider.ID) -or ($_.ProviderName -ne $IDplusProvider.Provider))}
+    }
+    
 ##Includes 
 #Include IDs
 if($IncludeID -ne "")
@@ -378,6 +392,14 @@ $xmlOutput = $xmlOutput + "<text>$text</text>"
 
 $xmlOutput = $xmlOutput + "</prtg>"
 
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-[Console]::WriteLine($xmlOutput)
-#https://kb.paessler.com/en/topic/64817-how-can-i-show-special-characters-with-exe-script-sensors
+try
+    {
+    [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+    [Console]::WriteLine($xmlOutput)
+    #https://kb.paessler.com/en/topic/64817-how-can-i-show-special-characters-with-exe-script-sensors
+    }
+
+catch
+    {
+    $xmlOutput
+    }
