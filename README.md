@@ -27,12 +27,18 @@ You can exclude IDs, Providers and Messages.
 
 
 The script got variables to global exclude events for all devices or parameter to exclude events for special devices.
+You can exclude:
+ - IDs
+ - Provider
+ - Messages
+ - ID + Provider (both has to match)
 
 ## Default global excludes
 
    | Exclude | Reason |
    | --- | --- |
-   | ID = 10016 | MS by design |
+   | ID= 10016 & Provider= "Microsoft-Windows-DistributedCOM"| MS by design |
+   | ID= 1500 & Provider= "SNMP" | Error when SNMP Traps are not configured |
    | Provider = Microsoft-Windows-Perflib | unnecessary |
    
 
