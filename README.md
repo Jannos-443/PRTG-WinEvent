@@ -19,7 +19,7 @@ You can exclude IDs, Providers and Messages.
 
    | Settings | Value |
    | --- | --- |
-   | EXE/Script | PRTG-WinEvent.ps1 |
+   | EXE/Script Advanced | PRTG-WinEvent.ps1 |
    | Parameters | -ComputerName %host + at least -LogName or -ProviderName |
    | Security Context | Use Windows credentials of parent device |
    | Scanning Interval | 15 minutes |
