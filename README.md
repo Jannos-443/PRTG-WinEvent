@@ -71,6 +71,9 @@ List all Logs of a Server:
 List Logs with *perf* in its Name
  `Get-WinEvent -ListLog *perf*`
 
+### Required Permission
+User has to be member of the "Event Log Readers" Group
+![PRTG-WinEvent](media/group.png)
 
 ### exclude Syntax
 For more information about regular expressions in PowerShell, visit [Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_regular_expressions).
