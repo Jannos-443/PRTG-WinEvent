@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
     Monitors Windows Eventlog with the ability to exclude and include.
 
@@ -208,7 +208,7 @@ catch
 
 #Get Events
 try{
-    if($Credentials -ne $null)
+    if($null -ne $Credentials)
         {
         $Events = Get-WinEvent -MaxEvents $MaxEvents -ComputerName $Computername -FilterHashtable $filter -Credential $Credentials
         }
@@ -240,108 +240,112 @@ catch{
 #Remove Event Level
 if($LogLevel -notmatch "A")
     {
-    $Events = $Events | where {$_.Level -ne 0}
+    $Events = $Events | Where-Object {$_.Level -ne 0}
     }
 
 if($LogLevel -notmatch "C")
     {
-    $Events = $Events | where {$_.Level -ne 1}
+    $Events = $Events | Where-Object {$_.Level -ne 1}
     }
 
 if($LogLevel -notmatch "E")
     {
-    $Events = $Events | where {$_.Level -ne 2}
+    $Events = $Events | Where-Object {$_.Level -ne 2}
     }
 
 if($LogLevel -notmatch "W")
     {
-    $Events = $Events | where {$_.Level -ne 3}
+    $Events = $Events | Where-Object {$_.Level -ne 3}
     }
 
 if($LogLevel -notmatch "I")
     {
-    $Events = $Events | where {$_.Level -ne 4}
+    $Events = $Events | Where-Object {$_.Level -ne 4}
     }
 
 if($LogLevel -notmatch "V")
     {
-    $Events = $Events | where {$_.Level -ne 5}
+    $Events = $Events | Where-Object {$_.Level -ne 5}
     }
 
 #Exclude Provider
 if($ExcludeProvider -ne "")
     {
-    $Events = $Events | where {$_.ProviderName -notmatch $ExcludeProvider}
+    $Events = $Events | Where-Object {$_.ProviderName -notmatch $ExcludeProvider}
     }
 
 #Exclude IDs
 if($ExcludeID -ne "")
     {
-    $Events = $Events | where {$_.ID -notmatch $ExcludeID}
+    $Events = $Events | Where-Object {$_.ID -notmatch $ExcludeID}
     }
 
 #Exclude Messages
 if($ExcludeMessage -ne "")
     {
-    $Events = $Events | where {$_.Message -notmatch $ExcludeMessage}
+    $Events = $Events | Where-Object {$_.Message -notmatch $ExcludeMessage}
     }
 
 ##Global Excludes
-$ExcludeProviderScript = '^(Microsoft-Windows-Perflib)$'
-#Perflib = unnecessary
+#Exclude Providers
+$ExcludeProviderScript = '^(Microsoft-Windows-Perflib)$' 
+    #Perflib = unnecessary
 
+#Exclude IDs
 $ExcludeIDScript = '^(123456789)$'
 
+#Exclude Messages
 $ExcludeMessageScript = ''
 
 #Exclude ID and Provider has to match
 $ExcludeIDwithProvider= @(
        @{ ID = '1500'; Provider = 'SNMP'} #1500 https://social.technet.microsoft.com/forums/windows/en-US/16de5197-3347-4a0d-967e-f5a950f89435/event-1500-snmp
        @{ ID = '10016'; Provider = "Microsoft-Windows-DistributedCOM"} #10016 https://docs.microsoft.com/en-us/troubleshoot/windows-client/application-management/event-10016-logged-when-accessing-dcom#cause
+       @{ ID = '1006'; Provider = "MSExchangeDiagnostics"} #1006 https://www.legalexchange.blog/2018/11/  
         )
 
 #Exclude Provider
 if($ExcludeProviderScript -ne "")
     {
-    $Events = $Events | where {$_.ProviderName -notmatch $ExcludeProviderScript}
+    $Events = $Events | Where-Object {$_.ProviderName -notmatch $ExcludeProviderScript}
     }
 
 #Exclude IDs
 if($ExcludeIDScript -ne "")
     {
-    $Events = $Events | where {$_.ID -notmatch $ExcludeIDScript}
+    $Events = $Events | Where-Object {$_.ID -notmatch $ExcludeIDScript}
     }
 
 #Exclude Messages
 if($ExcludeMessageScript -ne "")
     {
-    $Events = $Events | where {$_.Message -notmatch $ExcludeMessageScript}
+    $Events = $Events | Where-Object {$_.Message -notmatch $ExcludeMessageScript}
     }
 
 #Exclude ID+Provider 
 
 foreach($IDplusProvider in $ExcludeIDwithProvider)
     {
-    $Events = $Events | where {(($_.ID -ne $IDplusProvider.ID) -or ($_.ProviderName -ne $IDplusProvider.Provider))}
+    $Events = $Events | Where-Object {(($_.ID -ne $IDplusProvider.ID) -or ($_.ProviderName -ne $IDplusProvider.Provider))}
     }
     
 ##Includes 
 #Include IDs
 if($IncludeID -ne "")
     {
-    $Events = $Events | where {$_.ID -match $IncludeID}
+    $Events = $Events | Where-Object {$_.ID -match $IncludeID}
     }
 
 #Include Provider
 if($IncludeProvider -ne "")
     {
-    $Events = $Events | where {$_.ProviderName -match $IncludeProvider}
+    $Events = $Events | Where-Object {$_.ProviderName -match $IncludeProvider}
     }
 
 #Include Messages
 if($IncludeMessage -ne "")
     {
-    $Events = $Events | where {$_.Message -match $IncludeMessage}
+    $Events = $Events | Where-Object {$_.Message -match $IncludeMessage}
     }
 
 #Output
@@ -350,7 +354,7 @@ $text = ""
 
 if($count -ge 1)
     {
-    $Last = $Events | select -First 3
+    $Last = $Events | Select-Object -First 3
 
     foreach($event in $Last)
         {
@@ -392,14 +396,4 @@ $xmlOutput = $xmlOutput + "<text>$text</text>"
 
 $xmlOutput = $xmlOutput + "</prtg>"
 
-try
-    {
-    [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-    [Console]::WriteLine($xmlOutput)
-    #https://kb.paessler.com/en/topic/64817-how-can-i-show-special-characters-with-exe-script-sensors
-    }
-
-catch
-    {
-    $xmlOutput
-    }
+Write-Output $xmlOutput
