@@ -44,10 +44,25 @@ You can exclude:
 
 
 ## Examples
-Example Call: 
+Eventlog LogName "Application", LogLevel "CE" (Critical & Error) occured in the last 60 min     
 
-`PRTG-WinEvent.ps1 -Computername '%host' -LogName "Application" -TimeAgo 30 -LogLevel "CE" -ExcludeID '^(3025|3018)$'`
+`PRTG-WinEvent.ps1 -Computername '%host' -LogName "Application" -TimeAgo 60 -LogLevel "CE"`
 
+Eventlog LogName "Application" with EventID excludes 
+
+`PRTG-WinEvent.ps1 -Computername '%host' -LogName "Application" -TimeAgo 60 -LogLevel "CE" -ExcludeID '^(3025|3018)$'`
+
+Eventlog Provider "Microsoft-FSLogix-Apps"
+
+`PRTG-WinEvent.ps1 -Computername '%host' -Provider "Microsoft-FSLogix-Apps" -LogLevel "CE" -TimeAgo 60`
+
+Eventlog LogName "System" but exclude Providers "Powershell" and "Veeam Agent"
+
+`PRTG-WinEvent.ps1 -Computername '%host' -LogName "System" -LogLevel "CE" -TimeAgo 60" -ExcludeProvider '^(PowerShell|Veeam Agent)$'`
+
+Eventlog LogName "System" but exclude Provider "Powershell" and Exclude Event IDs "13" and "19" 
+
+`PRTG-WinEvent.ps1 -Computername '%host' -LogName "System" -LogLevel "CE" -TimeAgo 60" -ExcludeProvider '^(PowerShell)$' -ExcludeID '^(13|19)$'`
 
 ![PRTG-WinEvent](media/ok.png)
 ![PRTG-WinEvent](media/error.png)
