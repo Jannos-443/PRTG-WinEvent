@@ -111,6 +111,7 @@ trap{
     $Output = "line:$($_.InvocationInfo.ScriptLineNumber.ToString()) char:$($_.InvocationInfo.OffsetInLine.ToString()) --- message: $($_.Exception.Message.ToString()) --- line: $($_.InvocationInfo.Line.ToString()) "
     $Output = $Output.Replace("<","")
     $Output = $Output.Replace(">","")
+    $Output = $Output.Replace("#","")
     Write-Output "<prtg>"
     Write-Output "<error>1</error>"
     Write-Output "<text>$Output</text>"
@@ -145,14 +146,14 @@ $Date = (Get-Date).AddMinutes(-$TimeAgo)
 #Check LogName
 if($LogName -ne "")
     {
-    Get-WinEvent -ListLog $LogName -ComputerName $Computername
+    $null = Get-WinEvent -ListLog $LogName -ComputerName $Computername
     }
 
 
 #Check ProviderName
 if($ProviderName -ne "")
     {
-    Get-WinEvent -ListProvider $ProviderName -ComputerName $Computername
+    $null = Get-WinEvent -ListProvider $ProviderName -ComputerName $Computername
     }
 
 #FilterHashTable
@@ -370,21 +371,19 @@ else
     {
     if($LogName -ne "")
         {
-        $text += "Logname: $($LogName) ;"
+        $text += "Logname: $($LogName) ; "
         }
 
     if($ProviderName -ne "")
         {
-        $text += "ProviderName: $($ProviderName) ;"
+        $text += "ProviderName: $($ProviderName) ; "
         }
 
-    $text += " No Events found in the last $($TimeAgo)min"
+    $text += "No Events found in the last $($TimeAgo)min"
     }
 
-
-
 $xmlOutput = '<prtg>'
-$xmlOutput = $xmlOutput + "<result>
+$xmlOutput += "<result>
         <channel>Events found</channel>
         <value>$($count)</value>
         <unit>Count</unit>
@@ -392,8 +391,8 @@ $xmlOutput = $xmlOutput + "<result>
         <LimitMaxError>0</LimitMaxError>
         </result>"
 
-$xmlOutput = $xmlOutput + "<text>$text</text>"
+$xmlOutput += "<text>$text</text>"
 
-$xmlOutput = $xmlOutput + "</prtg>"
+$xmlOutput += "</prtg>"
 
 Write-Output $xmlOutput
